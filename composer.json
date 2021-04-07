@@ -1,0 +1,19 @@
+{
+  "name": "reinis/investment-tool",
+  "description": "Investment tool exercise",
+  "authors": [
+    {
+      "name": "Reinis Danne",
+      "email": "rei4dan@gmail.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "InvestmentTool\\": "src/"
+    }
+  },
+  "require-dev": {
+    "roave/security-advisories": "dev-latest",
+    "phpunit/phpunit": "^9.5"
+  }
+}
