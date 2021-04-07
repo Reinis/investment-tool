@@ -15,5 +15,10 @@
   "require-dev": {
     "roave/security-advisories": "dev-latest",
     "phpunit/phpunit": "^9.5"
+  },
+  "require": {
+    "ext-pdo": "*",
+    "vlucas/phpdotenv": "^5.3",
+    "league/container": "^3.3"
   }
 }
