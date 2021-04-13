@@ -19,6 +19,8 @@
   "require": {
     "ext-pdo": "*",
     "vlucas/phpdotenv": "^5.3",
-    "league/container": "^3.3"
+    "league/container": "^3.3",
+    "nikic/fast-route": "^1.3",
+    "twig/twig": "^3.3"
   }
 }

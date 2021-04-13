@@ -1,0 +1,56 @@
+{% extends "base.twig" %}
+
+{% block title %}Investment Tool{% endblock %}
+
+{% block search %}
+    <div class="flex p-4 mb-4 justify-center">
+        {% set searchField = searchField ?? 'symbol' %}
+        <form action="/search" method="post" class="flex items-baseline rounded overflow-hidden">
+            <select name="searchField" class="flex p-2 pr-7 border-0 border-r bg-gray-300 hover:bg-gray-400">
+                <option value="symbol"{% if searchField == 'symbol' %} selected{% endif %}>Symbol</option>
+            </select>
+            <input type="search" name="searchTerm" placeholder="Search" class="flex p-2 bg-gray-200 border-0">
+            <input type="submit" name="search" value="Search" class="flex p-2 bg-gray-700 text-gray-300">
+        </form>
+    </div>
+{% endblock %}
+
+{% block transactions %}
+    <div class="flex justify-center">
+        <table class="w-4/5 border-collapse">
+            <tr>
+                <th>Id</th>
+                <th>Symbol</th>
+                <th>Quote</th>
+                <th>Quote Date</th>
+                <th>Amount</th>
+                <th>Closed</th>
+                <th>Closing Value</th>
+                <th>Closing Date</th>
+                <th>Action</th>
+            </tr>
+            {% for transaction in transactions %}
+                <tr>
+                    <td>{{ transaction.id }}</td>
+                    <td>{{ transaction.symbol }}</td>
+                    <td>{{ transaction.quote }}</td>
+                    <td>{{ transaction.quoteDate | date("Y-m-d H:i:s") }}</td>
+                    <td>{{ transaction.amount }}</td>
+                    <td>{% if transaction.closed %}true{% else %}false{% endif %}</td>
+                    <td>{{ transaction.closingDate }}</td>
+                    <td>{{ transaction.closingValue }}</td>
+                    <td>
+                        <div class="flex justify-around items-center">
+                            <form action="/delete/{{ transaction.id }}" method="post">
+                                <input type="submit" value="Delete" class="hover:bg-gray-500 w-24 text-red-600 border border-red-600 px-4 py-1 mx-1 rounded cursor-pointer">
+                            </form>
+                            <a href="/edit/{{ transaction.id }}">
+                                <button class="hover:bg-gray-600 text-green-400 border border-green-400 w-24 px-4 py-1 mx-1 rounded">Edit</button>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+{% endblock %}

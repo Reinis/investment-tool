@@ -1,5 +1,6 @@
 /.idea/
 /vendor/
+/twig_cache/
 .env
 .env.test
 .phpunit.result.cache
