@@ -18,19 +18,15 @@ class HomeController
 
     public function index(): void
     {
-        $context = [
-            'transactions' => $this->repository->getAll(),
-        ];
+        $transactions = $this->repository->getAll();
 
-        echo $this->view->render('home', $context);
+        echo $this->view->render('home', compact('transactions'));
     }
 
     public function delete(array $vars): void
     {
-        $context = [
-            'message' => "Not implemented",
-        ];
+        $message = "Not implemented";
 
-        echo $this->view->render('error', $context);
+        echo $this->view->render('error', compact('message'));
     }
 }
