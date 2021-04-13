@@ -10,7 +10,9 @@ use Finnhub\Configuration;
 use GuzzleHttp\Client;
 use InvestmentTool\Config;
 use InvestmentTool\Controllers\HomeController;
+use InvestmentTool\Repositories\FinnhubAPIRepository;
 use InvestmentTool\Repositories\MySQLTransactionRepository;
+use InvestmentTool\Repositories\StockRepository;
 use InvestmentTool\Repositories\TransactionRepository;
 use InvestmentTool\Views\TwigView;
 use InvestmentTool\Views\View;
@@ -41,6 +43,9 @@ $container->add(DefaultApi::class, DefaultApi::class)
     ->addArgument(Client::class)
     ->addArgument(Configuration::class);
 
+$container->add(StockRepository::class, FinnhubAPIRepository::class)
+    ->addArgument(DefaultApi::class);
+
 $container->add(FilesystemLoader::class, FilesystemLoader::class)
     ->addArgument(__DIR__ . '/../src/Views/twig');
 $container->add(Environment::class, Environment::class)
@@ -56,7 +61,7 @@ $container->add(View::class, TwigView::class)
 
 $container->add(HomeController::class, HomeController::class)
     ->addArgument(TransactionRepository::class)
-    ->addArgument(DefaultApi::class)
+    ->addArgument(StockRepository::class)
     ->addArgument(View::class);
 
 

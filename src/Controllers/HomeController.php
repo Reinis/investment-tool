@@ -2,21 +2,21 @@
 
 namespace InvestmentTool\Controllers;
 
-use Finnhub\Api\DefaultApi;
 use Finnhub\ApiException;
+use InvestmentTool\Repositories\StockRepository;
 use InvestmentTool\Repositories\TransactionRepository;
 use InvestmentTool\Views\View;
 
 class HomeController
 {
     private TransactionRepository $repository;
-    private DefaultApi $client;
+    private StockRepository $stockRepository;
     private View $view;
 
-    public function __construct(TransactionRepository $repository, DefaultApi $client, View $view)
+    public function __construct(TransactionRepository $repository, StockRepository $stockRepository, View $view)
     {
         $this->repository = $repository;
-        $this->client = $client;
+        $this->stockRepository = $stockRepository;
         $this->view = $view;
     }
 
@@ -37,7 +37,7 @@ class HomeController
     public function quote(array $vars): void
     {
         try {
-            $quote = $this->client->quote($vars['symbol']);
+            $quote = $this->stockRepository->quote($vars['symbol']);
         } catch (ApiException $e) {
             $message = "API request failed";
             echo $this->view->render('error', compact('message'));
