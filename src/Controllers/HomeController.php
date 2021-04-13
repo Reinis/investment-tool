@@ -10,6 +10,8 @@ use InvestmentTool\Views\View;
 
 class HomeController
 {
+    private const BUDGET = 1_000_000;
+
     private TransactionRepository $transactionRepository;
     private StockRepository $stockRepository;
     private View $view;
@@ -24,8 +26,16 @@ class HomeController
     public function index(): void
     {
         $transactions = $this->transactionRepository->getAll();
+        $availableFunds = $this->getAvailableFunds();
 
-        echo $this->view->render('home', compact('transactions'));
+        echo $this->view->render('home', compact('transactions', 'availableFunds'));
+    }
+
+    private function getAvailableFunds(): int
+    {
+        return self::BUDGET
+            - $this->transactionRepository->getInvestedAmount()
+            + $this->transactionRepository->getEarnedAmount();
     }
 
     public function delete(array $vars): void
@@ -73,8 +83,9 @@ class HomeController
 
         $quote = $this->stockRepository->quote($symbol);
         $transactions = $this->transactionRepository->getAll();
+        $availableFunds = $this->getAvailableFunds();
 
-        echo $this->view->render('home', compact('symbol', 'quote', 'transactions'));
+        echo $this->view->render('home', compact('symbol', 'quote', 'transactions', 'availableFunds'));
     }
 
     public function quote(array $vars): void
@@ -98,6 +109,14 @@ class HomeController
 
         if ($symbol === 'none' || $quote === 'none' || $amount === 'none') {
             $message = "Invalid input";
+            echo $this->view->render('error', compact('message'));
+            die();
+        }
+
+        $availableFunds = $this->getAvailableFunds();
+
+        if ($quote * 1000 * $amount > $availableFunds) {
+            $message = "Not enough funds";
             echo $this->view->render('error', compact('message'));
             die();
         }

@@ -19,4 +19,8 @@ interface TransactionRepository
     public function getSymbol($id): string;
 
     public function close($id, Quote $quote): void;
+
+    public function getInvestedAmount(): int;
+
+    public function getEarnedAmount(): int;
 }
