@@ -5,6 +5,10 @@
 actor: UnitTester
 modules:
     enabled:
+        - Db:
+            dsn: "%INVESTMENT_TOOL_DB_DSN%"
+            user: "%INVESTMENT_TOOL_DB_USER%"
+            password: "%INVESTMENT_TOOL_DB_PASSWORD%"
         - Asserts
         - \Helper\Unit
     step_decorators: ~
