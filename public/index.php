@@ -5,6 +5,9 @@ declare(strict_types=1);
 require_once '../vendor/autoload.php';
 
 use FastRoute\RouteCollector;
+use Finnhub\Api\DefaultApi;
+use Finnhub\Configuration;
+use GuzzleHttp\Client;
 use InvestmentTool\Config;
 use InvestmentTool\Controllers\HomeController;
 use InvestmentTool\Repositories\MySQLTransactionRepository;
@@ -23,6 +26,21 @@ $container->add(Config::class, Config::class)
 $container->add(TransactionRepository::class, MySQLTransactionRepository::class)
     ->addArgument(Config::class);
 
+$container->add(Client::class, Client::class);
+
+$container->add(
+    Configuration::class,
+    function () {
+        $config = new Config();
+        return Configuration::getDefaultConfiguration()
+            ->setApiKey('token', $config->getApiKey());
+    }
+);
+
+$container->add(DefaultApi::class, DefaultApi::class)
+    ->addArgument(Client::class)
+    ->addArgument(Configuration::class);
+
 $container->add(FilesystemLoader::class, FilesystemLoader::class)
     ->addArgument(__DIR__ . '/../src/Views/twig');
 $container->add(Environment::class, Environment::class)
@@ -38,6 +56,7 @@ $container->add(View::class, TwigView::class)
 
 $container->add(HomeController::class, HomeController::class)
     ->addArgument(TransactionRepository::class)
+    ->addArgument(DefaultApi::class)
     ->addArgument(View::class);
 
 
@@ -48,6 +67,8 @@ $dispatcher = FastRoute\SimpleDispatcher(
         $r->addRoute('POST', '/delete/{id:\d+}', [HomeController::class, 'delete']);
 
         $r->addRoute('GET', '/edit/{id:\d+}', [HomeController::class, 'edit']);
+
+        $r->addRoute('GET', '/quote/{symbol:\S+}', [HomeController::class, 'quote']);
     }
 );
 
