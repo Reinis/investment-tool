@@ -6,17 +6,53 @@ use DateTime;
 
 class Transaction
 {
+    private ?int $id;
     private string $symbol;
     private int $quote;
     private int $amount;
     private DateTime $quoteDate;
+    private bool $closed;
+    private ?int $closingValue;
+    private ?DateTime $closingDate;
 
-    public function __construct(string $symbol, int $quote, int $amount)
+    public function __construct(
+        string $symbol,
+        int $quote,
+        int $amount,
+        bool $closed = false,
+        ?int $id = null,
+        ?int $closingValue = null,
+        ?DateTime $closingDate = null,
+        ?DateTime $quoteDate = null
+    )
     {
         $this->symbol = $symbol;
         $this->quote = $quote;
         $this->amount = $amount;
-        $this->quoteDate = new DateTime();
+        $this->id = $id;
+        $this->closed = $closed;
+        $this->closingValue = $closingValue;
+        $this->closingDate = $closingDate;
+        if ($quoteDate === null) {
+            $this->quoteDate = new DateTime();
+        } else {
+            $this->quoteDate = $quoteDate;
+        }
+    }
+
+    public function isClosed(): bool
+    {
+        return $this->closed;
+    }
+
+    public function getClosingValue(): ?int
+    {
+        return $this->closingValue;
+    }
+
+    public function getClosingDate(): ?DateTime
+    {
+        return $this->closingDate;
     }
 
     public function getSymbol(): string
@@ -37,5 +73,10 @@ class Transaction
     public function getQuoteDate(): DateTime
     {
         return $this->quoteDate;
+    }
+
+    public function getId(): ?int
+    {
+        return $this->id;
     }
 }

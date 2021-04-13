@@ -3,35 +3,61 @@
 namespace InvestmentTool\Controllers;
 
 use Finnhub\ApiException;
+use InvestmentTool\Entities\Transaction;
 use InvestmentTool\Repositories\StockRepository;
 use InvestmentTool\Repositories\TransactionRepository;
 use InvestmentTool\Views\View;
 
 class HomeController
 {
-    private TransactionRepository $repository;
+    private TransactionRepository $transactionRepository;
     private StockRepository $stockRepository;
     private View $view;
 
-    public function __construct(TransactionRepository $repository, StockRepository $stockRepository, View $view)
+    public function __construct(TransactionRepository $transactionRepository, StockRepository $stockRepository, View $view)
     {
-        $this->repository = $repository;
+        $this->transactionRepository = $transactionRepository;
         $this->stockRepository = $stockRepository;
         $this->view = $view;
     }
 
     public function index(): void
     {
-        $transactions = $this->repository->getAll();
+        $transactions = $this->transactionRepository->getAll();
 
         echo $this->view->render('home', compact('transactions'));
     }
 
     public function delete(array $vars): void
     {
-        $message = "Not implemented";
+        $id = $vars['id'] ?? 0;
 
-        echo $this->view->render('error', compact('message'));
+        if ($id === 0) {
+            $message = "Could no find the record";
+            echo $this->view->render('error', compact('message'));
+            die();
+        }
+
+        $this->transactionRepository->delete($id);
+
+        header('Location: /');
+    }
+
+    public function close(array $vars): void
+    {
+        $id = $vars['id'] ?? 0;
+
+        if ($id === 0) {
+            $message = "Could no find the record";
+            echo $this->view->render('error', compact('message'));
+            die();
+        }
+
+        $symbol = $this->transactionRepository->getSymbol($id);
+        $quote = $this->stockRepository->quote($symbol);
+        $this->transactionRepository->close($id, $quote);
+
+        header('Location: /');
     }
 
     public function getQuote(): void
@@ -46,7 +72,7 @@ class HomeController
         }
 
         $quote = $this->stockRepository->quote($symbol);
-        $transactions = $this->repository->getAll();
+        $transactions = $this->transactionRepository->getAll();
 
         echo $this->view->render('home', compact('symbol', 'quote', 'transactions'));
     }
@@ -62,5 +88,22 @@ class HomeController
         }
 
         echo $quote->getModelName() . ' ' . $quote->getC() . PHP_EOL;
+    }
+
+    public function buy(): void
+    {
+        $symbol = $_POST['symbol'] ?? 'none';
+        $quote = $_POST['quote'] ?? 'none';
+        $amount = $_POST['amount'] ?? 'none';
+
+        if ($symbol === 'none' || $quote === 'none' || $amount === 'none') {
+            $message = "Invalid input";
+            echo $this->view->render('error', compact('message'));
+            die();
+        }
+
+        $this->transactionRepository->add(new Transaction($symbol, $quote * 1000, $amount));
+
+        header('Location: /');
     }
 }

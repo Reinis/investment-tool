@@ -2,6 +2,8 @@
 
 namespace InvestmentTool\Repositories;
 
+use DateTime;
+use Finnhub\Model\Quote;
 use InvalidArgumentException;
 use InvestmentTool\Config;
 use InvestmentTool\Entities\Collections\Transactions;
@@ -52,10 +54,10 @@ class MySQLTransactionRepository implements TransactionRepository
         $sql = "select * from `transaction_log` where symbol = ?;";
         $errorMessage = "Transaction with symbol '{$symbol}' not found";
 
-        return $this->run($sql, $errorMessage, $symbol);
+        return $this->fetchAll($sql, $errorMessage, $symbol);
     }
 
-    private function run(string $sql, string $errorMessage, string ...$args): Transactions
+    private function fetchAll(string $sql, string $errorMessage, string ...$args): Transactions
     {
         $statement = $this->connection->prepare($sql);
         $statement->execute($args);
@@ -68,18 +70,80 @@ class MySQLTransactionRepository implements TransactionRepository
         $transactions = new Transactions();
 
         foreach ($results as $result) {
-            $transactions->add(new Transaction($result->symbol, $result->quote, $result->amount));
+            $transactions->add(
+                new Transaction(
+                    $result->symbol,
+                    $result->quote,
+                    $result->amount,
+                    $result->closed,
+                    $result->id,
+                    $result->closing_value,
+                    $result->closing_date === null ? null : new DateTime($result->closing_date),
+                    $result->quote_date === null ? null : new DateTime($result->quote_date),
+                )
+            );
         }
 
         return $transactions;
     }
-
 
     public function getAll(): Transactions
     {
         $sql = "select * from `transaction_log`;";
         $errorMessage = "No transactions found";
 
-        return $this->run($sql, $errorMessage);
+        return $this->fetchAll($sql, $errorMessage);
+    }
+
+    public function delete(int $id): void
+    {
+        $sql = "delete from `transaction_log` where id = ?;";
+        $statement = $this->connection->prepare($sql);
+        $statement->execute([$id]);
+    }
+
+    public function getSymbol($id): string
+    {
+        $sql = "select * from `transaction_log` where id = ?;";
+        $errorMessage = "Transaction not found";
+
+        return $this->fetch($sql, $errorMessage, $id)->getSymbol();
+    }
+
+    private function fetch(string $sql, string $errorMessage, string ...$args): Transaction
+    {
+        $statement = $this->connection->prepare($sql);
+        $statement->execute($args);
+        $result = $statement->fetch();
+
+        if ($result === false) {
+            throw new InvalidArgumentException($errorMessage);
+        }
+
+        var_dump($result);
+
+        return new Transaction(
+            $result->symbol,
+            $result->quote,
+            $result->amount,
+            $result->closed,
+            $result->id,
+            $result->closing_value,
+            $result->closing_date === null ? null : new DateTime($result->closing_date),
+            $result->quote_date === null ? null : new DateTime($result->quote_date),
+        );
+    }
+
+    public function close($id, Quote $quote): void
+    {
+        $sql = "update `transaction_log` set closed = true, closing_value = ?, closing_date = ? where id = ?;";
+        $statement = $this->connection->prepare($sql);
+        $statement->execute(
+            [
+                $quote->getC() * 1000,
+                (new DateTime('now'))->format('Y-m-d H:i:s'),
+                $id,
+            ]
+        );
     }
 }

@@ -71,11 +71,15 @@ $dispatcher = FastRoute\SimpleDispatcher(
 
         $r->addRoute('POST', '/delete/{id:\d+}', [HomeController::class, 'delete']);
 
+        $r->addRoute('GET', '/close/{id:\d+}', [HomeController::class, 'close']);
+
         $r->addRoute('GET', '/edit/{id:\d+}', [HomeController::class, 'edit']);
 
         $r->addRoute('GET', '/quote/{symbol:\S+}', [HomeController::class, 'quote']);
 
         $r->addRoute('POST', '/quote', [HomeController::class, 'getQuote']);
+
+        $r->addRoute('POST', '/buy', [HomeController::class, 'buy']);
     }
 );
 
