@@ -1,0 +1,9 @@
+{% extends "base.twig" %}
+
+{% block title %}Error{% endblock %}
+
+{% block content %}
+    {{ parent() }}
+    <h1 class="p-4 text-6xl font-bold font-serif">Error: {{ message }}</h1>
+    <div class="p-4 text-4xl">Something went wrong. Try again.</div>
+{% endblock %}
