@@ -147,34 +147,12 @@ class MySQLTransactionRepository implements TransactionRepository
         );
     }
 
-    public function getInvestedAmount(): int
-    {
-        $total = 0;
-
-        foreach ($this->getActive() as $transaction) {
-            $total += $transaction->getQuote() * $transaction->getAmount();
-        }
-
-        return $total;
-    }
-
     public function getActive(): Transactions
     {
         $sql = "select * from `transaction_log` where closed = false;";
         $errorMessage = "Could not get active investments";
 
         return $this->fetchAll($sql, $errorMessage);
-    }
-
-    public function getEarnedAmount(): int
-    {
-        $total = 0;
-
-        foreach ($this->getClosed() as $transaction) {
-            $total += ($transaction->getClosingValue() - $transaction->getQuote()) * $transaction->getAmount();
-        }
-
-        return $total;
     }
 
     public function getClosed(): Transactions

@@ -20,7 +20,7 @@ interface TransactionRepository
 
     public function close($id, Quote $quote): void;
 
-    public function getInvestedAmount(): int;
+    public function getActive(): Transactions;
 
-    public function getEarnedAmount(): int;
+    public function getClosed(): Transactions;
 }

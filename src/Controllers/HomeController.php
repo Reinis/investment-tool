@@ -6,36 +6,30 @@ use Finnhub\ApiException;
 use InvestmentTool\Entities\Transaction;
 use InvestmentTool\Repositories\StockRepository;
 use InvestmentTool\Repositories\TransactionRepository;
+use InvestmentTool\Services\FundsService;
 use InvestmentTool\Views\View;
 
 class HomeController
 {
-    private const BUDGET = 1_000_000;
-
     private TransactionRepository $transactionRepository;
     private StockRepository $stockRepository;
+    private FundsService $fundsService;
     private View $view;
 
-    public function __construct(TransactionRepository $transactionRepository, StockRepository $stockRepository, View $view)
+    public function __construct(TransactionRepository $transactionRepository, StockRepository $stockRepository, FundsService $fundsService, View $view)
     {
         $this->transactionRepository = $transactionRepository;
         $this->stockRepository = $stockRepository;
+        $this->fundsService = $fundsService;
         $this->view = $view;
     }
 
     public function index(): void
     {
         $transactions = $this->transactionRepository->getAll();
-        $availableFunds = $this->getAvailableFunds();
+        $availableFunds = $this->fundsService->getAvailableFunds();
 
         echo $this->view->render('home', compact('transactions', 'availableFunds'));
-    }
-
-    private function getAvailableFunds(): int
-    {
-        return self::BUDGET
-            - $this->transactionRepository->getInvestedAmount()
-            + $this->transactionRepository->getEarnedAmount();
     }
 
     public function delete(array $vars): void
@@ -83,7 +77,7 @@ class HomeController
 
         $quote = $this->stockRepository->quote($symbol);
         $transactions = $this->transactionRepository->getAll();
-        $availableFunds = $this->getAvailableFunds();
+        $availableFunds = $this->fundsService->getAvailableFunds();
 
         echo $this->view->render('home', compact('symbol', 'quote', 'transactions', 'availableFunds'));
     }
@@ -113,7 +107,7 @@ class HomeController
             die();
         }
 
-        $availableFunds = $this->getAvailableFunds();
+        $availableFunds = $this->fundsService->getAvailableFunds();
 
         if ($quote * 1000 * $amount > $availableFunds) {
             $message = "Not enough funds";

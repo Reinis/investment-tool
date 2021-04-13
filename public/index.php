@@ -14,6 +14,7 @@ use InvestmentTool\Repositories\FinnhubAPIRepository;
 use InvestmentTool\Repositories\MySQLTransactionRepository;
 use InvestmentTool\Repositories\StockRepository;
 use InvestmentTool\Repositories\TransactionRepository;
+use InvestmentTool\Services\FundsService;
 use InvestmentTool\Views\TwigView;
 use InvestmentTool\Views\View;
 use League\Container\Container;
@@ -27,6 +28,9 @@ $container->add(Config::class, Config::class)
     ->addArgument('.env');
 $container->add(TransactionRepository::class, MySQLTransactionRepository::class)
     ->addArgument(Config::class);
+
+$container->add(FundsService::class, FundsService::class)
+    ->addArgument(TransactionRepository::class);
 
 $container->add(Client::class, Client::class);
 
@@ -62,6 +66,7 @@ $container->add(View::class, TwigView::class)
 $container->add(HomeController::class, HomeController::class)
     ->addArgument(TransactionRepository::class)
     ->addArgument(StockRepository::class)
+    ->addArgument(FundsService::class)
     ->addArgument(View::class);
 
 
