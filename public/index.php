@@ -74,6 +74,8 @@ $dispatcher = FastRoute\SimpleDispatcher(
         $r->addRoute('GET', '/edit/{id:\d+}', [HomeController::class, 'edit']);
 
         $r->addRoute('GET', '/quote/{symbol:\S+}', [HomeController::class, 'quote']);
+
+        $r->addRoute('POST', '/quote', [HomeController::class, 'getQuote']);
     }
 );
 

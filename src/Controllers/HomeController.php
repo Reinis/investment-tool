@@ -34,6 +34,23 @@ class HomeController
         echo $this->view->render('error', compact('message'));
     }
 
+    public function getQuote(): void
+    {
+        $method = $_POST['method'] ?? 'none';
+        $symbol = trim($_POST['symbol']) ?? 'none';
+
+        if ($method !== 'quote' || $symbol === 'none') {
+            $message = "Invalid query";
+            echo $this->view->render('error', compact('message'));
+            die();
+        }
+
+        $quote = $this->stockRepository->quote($symbol);
+        $transactions = $this->repository->getAll();
+
+        echo $this->view->render('home', compact('symbol', 'quote', 'transactions'));
+    }
+
     public function quote(array $vars): void
     {
         try {
