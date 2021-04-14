@@ -45,6 +45,7 @@
                 <th>Quote</th>
                 <th>Quote Date</th>
                 <th>Amount</th>
+                <th>Total</th>
                 <th>Closed</th>
                 <th>Closing Value</th>
                 <th>Closing Date</th>
@@ -57,6 +58,7 @@
                     <td>{{ transaction.quote / 1000 }}</td>
                     <td>{{ transaction.quoteDate | date("Y-m-d H:i:s") }}</td>
                     <td>{{ transaction.amount }}</td>
+                    <td>{{ transaction.quote / 1000 * transaction.amount }}</td>
                     <td>{% if transaction.closed %}true{% else %}false{% endif %}</td>
                     <td>{% if transaction.closed %}{{ transaction.closingValue / 1000 }}{% endif %}</td>
                     <td>{% if transaction.closed %}{{ transaction.closingDate | date("Y-m-d H:i:s") }}{% endif %}</td>
