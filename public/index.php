@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 require_once '../vendor/autoload.php';
 
+use Doctrine\Common\Cache\Cache;
+use Doctrine\Common\Cache\FilesystemCache;
 use FastRoute\RouteCollector;
 use Finnhub\Api\DefaultApi;
 use Finnhub\Configuration;
@@ -47,8 +49,13 @@ $container->add(DefaultApi::class, DefaultApi::class)
     ->addArgument(Client::class)
     ->addArgument(Configuration::class);
 
+$container->add(Cache::class, FilesystemCache::class)
+    ->addArgument('../storage/cache');
+$container->add(FilesystemCache::class, FilesystemCache::class);
+
 $container->add(StockRepository::class, FinnhubAPIRepository::class)
-    ->addArgument(DefaultApi::class);
+    ->addArgument(DefaultApi::class)
+    ->addArgument(Cache::class);
 
 $container->add(FilesystemLoader::class, FilesystemLoader::class)
     ->addArgument(__DIR__ . '/../app/Views/twig');
