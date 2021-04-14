@@ -51,7 +51,7 @@ $container->add(StockRepository::class, FinnhubAPIRepository::class)
     ->addArgument(DefaultApi::class);
 
 $container->add(FilesystemLoader::class, FilesystemLoader::class)
-    ->addArgument(__DIR__ . '/../src/Views/twig');
+    ->addArgument(__DIR__ . '/../app/Views/twig');
 $container->add(Environment::class, Environment::class)
     ->addArgument(FilesystemLoader::class)
     ->addArgument(
