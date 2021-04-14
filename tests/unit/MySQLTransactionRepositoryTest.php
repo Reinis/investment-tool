@@ -3,6 +3,7 @@
 namespace unit;
 
 use Codeception\Test\Unit;
+use DateTime;
 use InvestmentTool\Config;
 use InvestmentTool\Entities\Transaction;
 use InvestmentTool\Repositories\MySQLTransactionRepository;
@@ -28,11 +29,6 @@ class MySQLTransactionRepositoryTest extends Unit
         $this->resetTestDBTables();
     }
 
-    public function _after(): void
-    {
-        $this->resetTestDBTables();
-    }
-
     private function resetTestDBTables(): void
     {
         $sql = "drop table if exists `investments_test`.`transaction_log`;";
@@ -42,11 +38,33 @@ class MySQLTransactionRepositoryTest extends Unit
         $this->connection->exec($sql);
     }
 
+    public function _after(): void
+    {
+        $this->resetTestDBTables();
+    }
+
     public function testAddTransaction(): void
     {
         $transaction = new Transaction('XYZ', 42, 5);
         $this->repository->add($transaction);
 
         $this->tester->seeInDatabase('transaction_log', ['symbol' => 'XYZ', 'quote' => 42, 'amount' => 5]);
+    }
+
+    public function testDeleteTransaction(): void
+    {
+        $this->tester->haveInDatabase(
+            'transaction_log',
+            [
+                'symbol' => 'XYZ',
+                'quote' => 42,
+                'quote_date' => (new DateTime('now'))->format('Y-m-d H:i:s'),
+                'amount' => 5,
+            ]
+        );
+
+        $this->tester->seeNumRecords(1, 'transaction_log');
+        $this->repository->delete(1);
+        $this->tester->seeNumRecords(0, 'transaction_log');
     }
 }
