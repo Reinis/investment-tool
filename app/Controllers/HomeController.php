@@ -4,21 +4,21 @@ namespace InvestmentTool\Controllers;
 
 use Finnhub\ApiException;
 use InvalidArgumentException;
-use InvestmentTool\Repositories\StockRepository;
 use InvestmentTool\Services\FundsService;
+use InvestmentTool\Services\QuoteService;
 use InvestmentTool\Services\TransactionService;
 use InvestmentTool\Views\View;
 
 class HomeController
 {
-    private StockRepository $stockRepository;
+    private QuoteService $quoteService;
     private TransactionService $transactionService;
     private FundsService $fundsService;
     private View $view;
 
-    public function __construct(StockRepository $stockRepository, TransactionService $transactionService, FundsService $fundsService, View $view)
+    public function __construct(QuoteService $quoteService, TransactionService $transactionService, FundsService $fundsService, View $view)
     {
-        $this->stockRepository = $stockRepository;
+        $this->quoteService = $quoteService;
         $this->transactionService = $transactionService;
         $this->fundsService = $fundsService;
         $this->view = $view;
@@ -75,7 +75,7 @@ class HomeController
             return $this->view->render('error', compact('message'));
         }
 
-        $quote = $this->stockRepository->quote($symbol);
+        $quote = $this->quoteService->quote($symbol);
         $transactions = $this->transactionService->getAll();
         $availableFunds = $this->fundsService->getAvailableFunds();
 
@@ -85,7 +85,7 @@ class HomeController
     public function quote(array $vars): string
     {
         try {
-            $quote = $this->stockRepository->quote($vars['symbol']);
+            $quote = $this->quoteService->quote($vars['symbol']);
         } catch (ApiException $e) {
             $message = "API request failed";
             return $this->view->render('error', compact('message'));

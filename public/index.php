@@ -17,6 +17,7 @@ use InvestmentTool\Repositories\MySQLTransactionRepository;
 use InvestmentTool\Repositories\StockRepository;
 use InvestmentTool\Repositories\TransactionRepository;
 use InvestmentTool\Services\FundsService;
+use InvestmentTool\Services\QuoteService;
 use InvestmentTool\Services\TransactionService;
 use InvestmentTool\Views\TwigView;
 use InvestmentTool\Views\View;
@@ -32,6 +33,8 @@ $container->add(Config::class, Config::class)
 $container->add(TransactionRepository::class, MySQLTransactionRepository::class)
     ->addArgument(Config::class);
 
+$container->add(QuoteService::class, QuoteService::class)
+    ->addArgument(StockRepository::class);
 $container->add(FundsService::class, FundsService::class)
     ->addArgument(TransactionRepository::class);
 $container->add(TransactionService::class, TransactionService::class)
@@ -76,7 +79,7 @@ $container->add(View::class, TwigView::class)
     ->addArgument(Environment::class);
 
 $container->add(HomeController::class, HomeController::class)
-    ->addArgument(StockRepository::class)
+    ->addArgument(QuoteService::class)
     ->addArgument(TransactionService::class)
     ->addArgument(FundsService::class)
     ->addArgument(View::class);
