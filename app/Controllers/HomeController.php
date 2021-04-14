@@ -4,6 +4,7 @@ namespace InvestmentTool\Controllers;
 
 use Finnhub\ApiException;
 use InvalidArgumentException;
+use InvestmentTool\Services\AssetService;
 use InvestmentTool\Services\FundsService;
 use InvestmentTool\Services\QuoteService;
 use InvestmentTool\Services\TransactionService;
@@ -11,13 +12,21 @@ use InvestmentTool\Views\View;
 
 class HomeController
 {
+    private AssetService $assetService;
     private QuoteService $quoteService;
     private TransactionService $transactionService;
     private FundsService $fundsService;
     private View $view;
 
-    public function __construct(QuoteService $quoteService, TransactionService $transactionService, FundsService $fundsService, View $view)
+    public function __construct(
+        AssetService $assetService,
+        QuoteService $quoteService,
+        TransactionService $transactionService,
+        FundsService $fundsService,
+        View $view
+    )
     {
+        $this->assetService = $assetService;
         $this->quoteService = $quoteService;
         $this->transactionService = $transactionService;
         $this->fundsService = $fundsService;
@@ -113,5 +122,13 @@ class HomeController
         }
 
         header('Location: /');
+    }
+
+    public function overview(): string
+    {
+        $symbols = $this->assetService->get();
+        $availableFunds = $this->fundsService->getAvailableFunds();
+
+        return $this->view->render('overview', compact('symbols', 'availableFunds'));
     }
 }

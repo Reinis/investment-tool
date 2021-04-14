@@ -24,6 +24,7 @@ use InvestmentTool\Views\TwigView;
 use InvestmentTool\Views\View;
 use League\Container\Container;
 use Twig\Environment;
+use Twig\Extra\Intl\IntlExtension;
 use Twig\Loader\FilesystemLoader;
 
 
@@ -79,11 +80,13 @@ $container->add(Environment::class, Environment::class)
             'cache' => __DIR__ . '/../twig_cache',
             'auto_reload' => true,
         ]
-    );
+    )
+    ->addMethodCall('addExtension', [new IntlExtension()]);
 $container->add(View::class, TwigView::class)
     ->addArgument(Environment::class);
 
 $container->add(HomeController::class, HomeController::class)
+    ->addArgument(AssetService::class)
     ->addArgument(QuoteService::class)
     ->addArgument(TransactionService::class)
     ->addArgument(FundsService::class)
@@ -105,6 +108,8 @@ $dispatcher = FastRoute\SimpleDispatcher(
         $r->addRoute('POST', '/quote', [HomeController::class, 'getQuote']);
 
         $r->addRoute('POST', '/buy', [HomeController::class, 'buy']);
+
+        $r->addRoute('GET', '/overview', [HomeController::class, 'overview']);
     }
 );
 

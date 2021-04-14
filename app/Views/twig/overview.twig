@@ -1,0 +1,40 @@
+{% extends "base.twig" %}
+
+{% block title %}Investment Tool{% endblock %}
+
+{% block content %}
+    {{ parent() }}
+    <div class="flex flex-wrap justify-items-center gap-4 m-2">
+        {% for symbol in symbols %}
+            <div class="w-64 h-32 grid grid-cols-2 gap-2 p-2 bg-gray-400">
+                <div class="grid">
+                    <div class="w-14 h-14"><img src="{{ symbol.logo }}" alt="logo"></div>
+                    <div class="font-bold">{{ symbol.symbol }}</div>
+                    <div>{{ symbol.name }}</div>
+                </div>
+                <div class="grid">
+                    <div class="flex text-xl justify-between">
+                        <div>
+                            {{ (symbol.value / 1000) | format_currency('USD', locale='en') }}
+                        </div>
+                        <div class="font-bold mr-2">
+                            x{{ symbol.amount }}
+                        </div>
+                    </div>
+                    <div class="self-center text-center">
+                        <span
+                            class="font-bold {{ symbol.difference < 0 ? 'text-red-800' : 'text-green-600' }}">
+                            {{ symbol.difference | round(2) }}%
+                        </span>
+                        <span class="text-sm">
+                            ({{ ((symbol.price - symbol.value) / 1000) | round(2) }})
+                        </span>
+                    </div>
+                    <div class="text-2xl font-bold text-gray-300 self-end justify-self-end underline">
+                        Sell
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
