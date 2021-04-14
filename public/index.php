@@ -16,6 +16,7 @@ use InvestmentTool\Repositories\FinnhubAPIRepository;
 use InvestmentTool\Repositories\MySQLTransactionRepository;
 use InvestmentTool\Repositories\StockRepository;
 use InvestmentTool\Repositories\TransactionRepository;
+use InvestmentTool\Services\AssetService;
 use InvestmentTool\Services\FundsService;
 use InvestmentTool\Services\QuoteService;
 use InvestmentTool\Services\TransactionService;
@@ -35,6 +36,10 @@ $container->add(TransactionRepository::class, MySQLTransactionRepository::class)
 
 $container->add(QuoteService::class, QuoteService::class)
     ->addArgument(StockRepository::class);
+$container->add(AssetService::class, AssetService::class)
+    ->addArgument(QuoteService::class)
+    ->addArgument(StockRepository::class)
+    ->addArgument(TransactionRepository::class);
 $container->add(FundsService::class, FundsService::class)
     ->addArgument(TransactionRepository::class);
 $container->add(TransactionService::class, TransactionService::class)
