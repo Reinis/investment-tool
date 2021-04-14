@@ -116,6 +116,6 @@ switch ($routeInfo[0]) {
     case FastRoute\Dispatcher::FOUND:
         [$class, $method] = $routeInfo[1];
         $vars = $routeInfo[2];
-        $container->get($class)->$method($vars);
+        echo $container->get($class)->$method($vars);
         break;
 }

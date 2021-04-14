@@ -24,22 +24,21 @@ class HomeController
         $this->view = $view;
     }
 
-    public function index(): void
+    public function index(): string
     {
         $transactions = $this->transactionRepository->getAll();
         $availableFunds = $this->fundsService->getAvailableFunds();
 
-        echo $this->view->render('home', compact('transactions', 'availableFunds'));
+        return $this->view->render('home', compact('transactions', 'availableFunds'));
     }
 
-    public function delete(array $vars): void
+    public function delete(array $vars): string
     {
         $id = $vars['id'] ?? 0;
 
         if ($id === 0) {
             $message = "Could no find the record";
-            echo $this->view->render('error', compact('message'));
-            die();
+            return $this->view->render('error', compact('message'));
         }
 
         $this->transactionRepository->delete($id);
@@ -47,14 +46,13 @@ class HomeController
         header('Location: /');
     }
 
-    public function close(array $vars): void
+    public function close(array $vars): string
     {
         $id = $vars['id'] ?? 0;
 
         if ($id === 0) {
             $message = "Could no find the record";
-            echo $this->view->render('error', compact('message'));
-            die();
+            return $this->view->render('error', compact('message'));
         }
 
         $symbol = $this->transactionRepository->getSymbol($id);
@@ -64,38 +62,36 @@ class HomeController
         header('Location: /');
     }
 
-    public function getQuote(): void
+    public function getQuote(): string
     {
         $method = $_POST['method'] ?? 'none';
         $symbol = trim($_POST['symbol']) ?? 'none';
 
         if ($method !== 'quote' || $symbol === 'none') {
             $message = "Invalid query";
-            echo $this->view->render('error', compact('message'));
-            die();
+            return $this->view->render('error', compact('message'));
         }
 
         $quote = $this->stockRepository->quote($symbol);
         $transactions = $this->transactionRepository->getAll();
         $availableFunds = $this->fundsService->getAvailableFunds();
 
-        echo $this->view->render('home', compact('symbol', 'quote', 'transactions', 'availableFunds'));
+        return $this->view->render('home', compact('symbol', 'quote', 'transactions', 'availableFunds'));
     }
 
-    public function quote(array $vars): void
+    public function quote(array $vars): string
     {
         try {
             $quote = $this->stockRepository->quote($vars['symbol']);
         } catch (ApiException $e) {
             $message = "API request failed";
-            echo $this->view->render('error', compact('message'));
-            die();
+            return $this->view->render('error', compact('message'));
         }
 
-        echo $quote->getModelName() . ' ' . $quote->getC() . PHP_EOL;
+        return $quote->getModelName() . ' ' . $quote->getC() . PHP_EOL;
     }
 
-    public function buy(): void
+    public function buy(): string
     {
         $symbol = $_POST['symbol'] ?? 'none';
         $quote = $_POST['quote'] ?? 'none';
@@ -103,16 +99,14 @@ class HomeController
 
         if ($symbol === 'none' || $quote === 'none' || $amount === 'none') {
             $message = "Invalid input";
-            echo $this->view->render('error', compact('message'));
-            die();
+            return $this->view->render('error', compact('message'));
         }
 
         $availableFunds = $this->fundsService->getAvailableFunds();
 
         if ($quote * 1000 * $amount > $availableFunds) {
             $message = "Not enough funds";
-            echo $this->view->render('error', compact('message'));
-            die();
+            return $this->view->render('error', compact('message'));
         }
 
         $this->transactionRepository->add(new Transaction($symbol, $quote * 1000, $amount));
