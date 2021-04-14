@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Repositories;
+namespace unit\Repositories;
 
 use InvalidArgumentException;
 use InvestmentTool\Config;
@@ -44,17 +44,23 @@ class MySQLTransactionRepositoryTest extends TestCase
         }
 
         // Reset tables in the test database
+        self::resetTestDBTables();
+    }
+
+    public static function tearDownAfterClass(): void
+    {
+        self::resetTestDBTables();
+        self::$repository = null;
+        self::$connection = null;
+    }
+
+    private static function resetTestDBTables(): void
+    {
         $sql = "drop table if exists `investments_test`.`transaction_log`;";
         self::$connection->exec($sql);
 
         $sql = "create table `investments_test`.`transaction_log` like `investments`.`transaction_log`;";
         self::$connection->exec($sql);
-    }
-
-    public static function tearDownAfterClass(): void
-    {
-        self::$repository = null;
-        self::$connection = null;
     }
 
     public function testAddTransaction(): void

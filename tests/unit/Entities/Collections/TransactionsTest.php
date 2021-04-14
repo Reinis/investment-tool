@@ -1,6 +1,6 @@
 <?php
 
-namespace Entities\Collections;
+namespace unit\Entities\Collections;
 
 use InvestmentTool\Entities\Collections\Transactions;
 use InvestmentTool\Entities\Transaction;

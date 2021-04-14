@@ -1,6 +1,6 @@
 <?php
 
-namespace Entities;
+namespace unit\Entities;
 
 use InvestmentTool\Entities\Transaction;
 use PHPUnit\Framework\TestCase;
