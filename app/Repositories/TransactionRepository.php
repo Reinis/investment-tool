@@ -16,9 +16,11 @@ interface TransactionRepository
 
     public function delete(int $id): void;
 
-    public function getSymbol($id): string;
+    public function getSymbol(int $id): string;
 
-    public function close($id, Quote $quote): void;
+    public function isClosed(int $id): bool;
+
+    public function close(int $id, Quote $quote): void;
 
     public function getActive(): Transactions;
 

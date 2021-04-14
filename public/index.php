@@ -32,10 +32,12 @@ $container->add(Config::class, Config::class)
 $container->add(TransactionRepository::class, MySQLTransactionRepository::class)
     ->addArgument(Config::class);
 
-$container->add(TransactionService::class, TransactionService::class)
-    ->addArgument(TransactionRepository::class);
 $container->add(FundsService::class, FundsService::class)
     ->addArgument(TransactionRepository::class);
+$container->add(TransactionService::class, TransactionService::class)
+    ->addArgument(TransactionRepository::class)
+    ->addArgument(StockRepository::class)
+    ->addArgument(FundsService::class);
 
 $container->add(Client::class, Client::class);
 

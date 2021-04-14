@@ -19,11 +19,11 @@ class FinnhubAPIRepository implements StockRepository
         $this->cache = $cache;
     }
 
-    public function quote(string $symbol): Quote
+    public function quote(string $symbol, bool $direct = false): Quote
     {
         $key = 'quote for ' . $symbol;
 
-        if ($this->cache->contains($key)) {
+        if (!$direct && $this->cache->contains($key)) {
             return $this->cache->fetch($key);
         }
 

@@ -6,5 +6,5 @@ use Finnhub\Model\Quote;
 
 interface StockRepository
 {
-    public function quote(string $symbol): Quote;
+    public function quote(string $symbol, bool $direct = false): Quote;
 }

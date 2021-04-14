@@ -3,7 +3,7 @@
 namespace InvestmentTool\Controllers;
 
 use Finnhub\ApiException;
-use InvestmentTool\Entities\Transaction;
+use InvalidArgumentException;
 use InvestmentTool\Repositories\StockRepository;
 use InvestmentTool\Services\FundsService;
 use InvestmentTool\Services\TransactionService;
@@ -55,9 +55,12 @@ class HomeController
             return $this->view->render('error', compact('message'));
         }
 
-        $symbol = $this->transactionService->getSymbol($id);
-        $quote = $this->stockRepository->quote($symbol);
-        $this->transactionService->close($id, $quote);
+        try {
+            $this->transactionService->close($id);
+        } catch (InvalidArgumentException $e) {
+            $message = "Invalid action";
+            return $this->view->render('error', compact('message'));
+        }
 
         header('Location: /');
     }
@@ -102,14 +105,12 @@ class HomeController
             return $this->view->render('error', compact('message'));
         }
 
-        $availableFunds = $this->fundsService->getAvailableFunds();
-
-        if ($quote * 1000 * $amount > $availableFunds) {
+        try {
+            $this->transactionService->add($symbol, $amount);
+        } catch (InvalidArgumentException $e) {
             $message = "Not enough funds";
             return $this->view->render('error', compact('message'));
         }
-
-        $this->transactionService->add(new Transaction($symbol, $quote * 1000, $amount));
 
         header('Location: /');
     }
