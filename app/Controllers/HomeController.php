@@ -5,28 +5,28 @@ namespace InvestmentTool\Controllers;
 use Finnhub\ApiException;
 use InvestmentTool\Entities\Transaction;
 use InvestmentTool\Repositories\StockRepository;
-use InvestmentTool\Repositories\TransactionRepository;
 use InvestmentTool\Services\FundsService;
+use InvestmentTool\Services\TransactionService;
 use InvestmentTool\Views\View;
 
 class HomeController
 {
-    private TransactionRepository $transactionRepository;
     private StockRepository $stockRepository;
+    private TransactionService $transactionService;
     private FundsService $fundsService;
     private View $view;
 
-    public function __construct(TransactionRepository $transactionRepository, StockRepository $stockRepository, FundsService $fundsService, View $view)
+    public function __construct(StockRepository $stockRepository, TransactionService $transactionService, FundsService $fundsService, View $view)
     {
-        $this->transactionRepository = $transactionRepository;
         $this->stockRepository = $stockRepository;
+        $this->transactionService = $transactionService;
         $this->fundsService = $fundsService;
         $this->view = $view;
     }
 
     public function index(): string
     {
-        $transactions = $this->transactionRepository->getAll();
+        $transactions = $this->transactionService->getAll();
         $availableFunds = $this->fundsService->getAvailableFunds();
 
         return $this->view->render('home', compact('transactions', 'availableFunds'));
@@ -41,7 +41,7 @@ class HomeController
             return $this->view->render('error', compact('message'));
         }
 
-        $this->transactionRepository->delete($id);
+        $this->transactionService->delete($id);
 
         header('Location: /');
     }
@@ -55,9 +55,9 @@ class HomeController
             return $this->view->render('error', compact('message'));
         }
 
-        $symbol = $this->transactionRepository->getSymbol($id);
+        $symbol = $this->transactionService->getSymbol($id);
         $quote = $this->stockRepository->quote($symbol);
-        $this->transactionRepository->close($id, $quote);
+        $this->transactionService->close($id, $quote);
 
         header('Location: /');
     }
@@ -73,7 +73,7 @@ class HomeController
         }
 
         $quote = $this->stockRepository->quote($symbol);
-        $transactions = $this->transactionRepository->getAll();
+        $transactions = $this->transactionService->getAll();
         $availableFunds = $this->fundsService->getAvailableFunds();
 
         return $this->view->render('home', compact('symbol', 'quote', 'transactions', 'availableFunds'));
@@ -109,7 +109,7 @@ class HomeController
             return $this->view->render('error', compact('message'));
         }
 
-        $this->transactionRepository->add(new Transaction($symbol, $quote * 1000, $amount));
+        $this->transactionService->add(new Transaction($symbol, $quote * 1000, $amount));
 
         header('Location: /');
     }
