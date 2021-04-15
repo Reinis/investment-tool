@@ -12,11 +12,11 @@
 {% if quote %}
     <div class="grid gid-cols-2 gap-4 justify-items-center">
         <div class="grid grid-cols-2 gap-2 fields">
-            <span>O</span><span>{{ quote.O }}</span>
-            <span>H</span><span>{{ quote.H }}</span>
-            <span>L</span><span>{{ quote.L }}</span>
-            <span>C</span><span>{{ quote.C }}</span>
-            <span>Pc</span><span>{{ quote.Pc }}</span>
+            <span>Open price of the day</span><span>{{ quote.O }}</span>
+            <span>High price of the day</span><span>{{ quote.H }}</span>
+            <span>Low price of the day</span><span>{{ quote.L }}</span>
+            <span>Current price</span><span>{{ quote.C }}</span>
+            <span>Previous close price</span><span>{{ quote.Pc }}</span>
         </div>
         <div class="grid grid-cols-1 gap-2 mb-4">
             <form action="/buy" method="post" class="inputs">
