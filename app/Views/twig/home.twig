@@ -2,6 +2,8 @@
 
 {% block title %}Investment Tool{% endblock %}
 
+{% block cards %}{% include "cards.twig" %}{% endblock %}
+
 {% block search %}
     <div class="flex p-4 mb-4 justify-center">
         {% set method = method ?? 'quote' %}

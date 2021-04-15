@@ -35,10 +35,11 @@ class HomeController
 
     public function index(): string
     {
+        $symbols = $this->assetService->get();
         $transactions = $this->transactionService->getAll();
         $availableFunds = $this->fundsService->getAvailableFunds();
 
-        return $this->view->render('home', compact('transactions', 'availableFunds'));
+        return $this->view->render('home', compact('symbols', 'transactions', 'availableFunds'));
     }
 
     public function delete(array $vars): string
@@ -122,13 +123,5 @@ class HomeController
         }
 
         header('Location: /');
-    }
-
-    public function overview(): string
-    {
-        $symbols = $this->assetService->get();
-        $availableFunds = $this->fundsService->getAvailableFunds();
-
-        return $this->view->render('overview', compact('symbols', 'availableFunds'));
     }
 }

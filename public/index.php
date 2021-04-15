@@ -108,8 +108,6 @@ $dispatcher = FastRoute\SimpleDispatcher(
         $r->addRoute('POST', '/quote', [HomeController::class, 'getQuote']);
 
         $r->addRoute('POST', '/buy', [HomeController::class, 'buy']);
-
-        $r->addRoute('GET', '/overview', [HomeController::class, 'overview']);
     }
 );
 
