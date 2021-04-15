@@ -20,6 +20,10 @@ use InvestmentTool\Services\AssetService;
 use InvestmentTool\Services\FundsService;
 use InvestmentTool\Services\QuoteService;
 use InvestmentTool\Services\TransactionService;
+use InvestmentTool\Validation\PostValidator;
+use InvestmentTool\Validation\ValidatorInterface;
+use InvestmentTool\ValidationRules\BuyPostValidationRules;
+use InvestmentTool\ValidationRules\QuotePostValidationRules;
 use InvestmentTool\Views\TwigView;
 use InvestmentTool\Views\View;
 use League\Container\Container;
@@ -85,7 +89,16 @@ $container->add(Environment::class, Environment::class)
 $container->add(View::class, TwigView::class)
     ->addArgument(Environment::class);
 
+$container->add(ValidatorInterface::class, PostValidator::class)
+    ->addArgument(
+    [
+        'quote' => QuotePostValidationRules::get(),
+        'buy' => BuyPostValidationRules::get(),
+    ]
+);
+
 $container->add(HomeController::class, HomeController::class)
+    ->addArgument(ValidatorInterface::class)
     ->addArgument(AssetService::class)
     ->addArgument(QuoteService::class)
     ->addArgument(TransactionService::class)

@@ -1,6 +1,8 @@
 <?php
 
+
 namespace InvestmentTool\Controllers;
+
 
 use Finnhub\ApiException;
 use InvalidArgumentException;
@@ -8,10 +10,14 @@ use InvestmentTool\Services\AssetService;
 use InvestmentTool\Services\FundsService;
 use InvestmentTool\Services\QuoteService;
 use InvestmentTool\Services\TransactionService;
+use InvestmentTool\Validation\FailedValidationException;
+use InvestmentTool\Validation\ValidatorInterface;
 use InvestmentTool\Views\View;
+
 
 class HomeController
 {
+    private ValidatorInterface $validator;
     private AssetService $assetService;
     private QuoteService $quoteService;
     private TransactionService $transactionService;
@@ -19,6 +25,7 @@ class HomeController
     private View $view;
 
     public function __construct(
+        ValidatorInterface $validator,
         AssetService $assetService,
         QuoteService $quoteService,
         TransactionService $transactionService,
@@ -26,6 +33,7 @@ class HomeController
         View $view
     )
     {
+        $this->validator = $validator;
         $this->assetService = $assetService;
         $this->quoteService = $quoteService;
         $this->transactionService = $transactionService;
@@ -77,14 +85,14 @@ class HomeController
 
     public function getQuote(): string
     {
-        $method = $_POST['method'] ?? 'none';
-        $symbol = trim($_POST['symbol']) ?? 'none';
-
-        if ($method !== 'quote' || $symbol === 'none') {
+        try {
+            $this->validator->validate('quote', $_POST);
+        } catch (FailedValidationException $e) {
             $message = "Invalid query";
             return $this->view->render('error', compact('message'));
         }
 
+        $symbol = trim($_POST['symbol']);
         $quote = $this->quoteService->quote($symbol);
         $assets = $this->assetService->get();
         $transactions = $this->transactionService->getAll();
@@ -107,14 +115,15 @@ class HomeController
 
     public function buy(): string
     {
-        $symbol = $_POST['symbol'] ?? 'none';
-        $quote = $_POST['quote'] ?? 'none';
-        $amount = $_POST['amount'] ?? 'none';
-
-        if ($symbol === 'none' || $quote === 'none' || $amount === 'none') {
+        try {
+            $this->validator->validate('buy', $_POST);
+        } catch (FailedValidationException $e) {
             $message = "Invalid input";
             return $this->view->render('error', compact('message'));
         }
+
+        $symbol = $_POST['symbol'];
+        $amount = $_POST['amount'];
 
         try {
             $this->transactionService->add($symbol, $amount);

@@ -9,7 +9,8 @@
   ],
   "autoload": {
     "psr-4": {
-      "InvestmentTool\\": "app/"
+      "InvestmentTool\\": "app/",
+      "InvestmentTool\\Validation\\": "src/Validation"
     }
   },
   "require-dev": {
