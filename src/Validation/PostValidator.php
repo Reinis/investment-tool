@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 
 namespace InvestmentTool\Validation;
 
@@ -18,12 +20,16 @@ class PostValidator implements ValidatorInterface
         }
     }
 
+    /**
+     * @throws FailedValidationException
+     */
     public function validate(string $name, array $values): void
     {
         $results = [];
 
-        foreach ($values as $key => $value) {
-            $results[$key] = $this->rules[$name]->check($key, $value);
+        foreach ($this->rules[$name] as $rule) {
+            $fieldName = $rule->getName();
+            $results[$fieldName] = isset($values[$fieldName]) && $rule->check($values[$fieldName]);
         }
 
         if (!(bool)array_product($results)) {

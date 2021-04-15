@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 
 namespace InvestmentTool\Validation;
 
@@ -18,11 +20,6 @@ class Rule
     public function getName(): string
     {
         return $this->name;
-    }
-
-    public function getConditions(): Conditions
-    {
-        return $this->conditions;
     }
 
     public function check(string $value): bool
