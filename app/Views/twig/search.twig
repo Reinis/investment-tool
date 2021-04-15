@@ -9,23 +9,17 @@
         <input type="submit" name="quote" value="Get" class="flex p-2 bg-gray-700 text-gray-300">
     </form>
 </div>
-{% if quote %}
-    <div class="grid gid-cols-2 gap-4 justify-items-center">
-        <div class="grid grid-cols-2 gap-2 fields">
-            <span>Open price of the day</span><span>{{ quote.O }}</span>
-            <span>High price of the day</span><span>{{ quote.H }}</span>
-            <span>Low price of the day</span><span>{{ quote.L }}</span>
-            <span>Current price</span><span>{{ quote.C }}</span>
-            <span>Previous close price</span><span>{{ quote.Pc }}</span>
+<div class="flex mb-4 justify-center">
+    <form action="/buy" method="post" class="flex items-baseline justify-center">
+        <div class="flex mr-4">
+            <span class="mr-2 font-bold text-lg">Price:</span>
+            <span class="text-lg">{{ quote.C | format_currency('USD', locale='en') }}</span>
         </div>
-        <div class="grid grid-cols-1 gap-2 mb-4">
-            <form action="/buy" method="post" class="inputs">
-                <label for="amount">Amount</label>
-                <input type="number" id="amount" placeholder="0" name="amount">
-                <input type="hidden" name="symbol" value="{{ symbol }}">
-                <input type="hidden" name="quote" value="{{ quote.C }}">
-                <input type="submit" class="btn-gray font-bold" value="Buy">
-            </form>
+        <div class="flex">
+            <input type="hidden" name="symbol" value="{{ symbol }}">
+            <input type="text" name="amount" id="amount" placeholder="Amount"
+                   class="w-20 pl-4 py-0 px-0 border-0 rounded-l-full bg-gray-200">
+            <input type="submit" value="Buy" class="w-16 btn-gray font-bold rounded-r-full bg-gray-700 text-gray-300">
         </div>
-    </div>
-{% endif %}
+    </form>
+</div>
