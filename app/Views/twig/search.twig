@@ -1,0 +1,31 @@
+<div class="flex p-4 mb-4 justify-center">
+    {% set method = method ?? 'quote' %}
+    <form action="/quote" method="post" class="flex items-baseline rounded overflow-hidden">
+        <select name="method" class="flex p-2 pr-7 border-0 border-r bg-gray-300 hover:bg-gray-400">
+            <option value="quote"{% if method == 'quote' %} selected{% endif %}>Quote</option>
+        </select>
+        <input type="search" name="symbol" placeholder="Symbol" class="flex p-2 bg-gray-200 border-0"
+               {% if symbol %}value="{{ symbol }}"{% endif %}>
+        <input type="submit" name="quote" value="Get" class="flex p-2 bg-gray-700 text-gray-300">
+    </form>
+</div>
+{% if quote %}
+    <div class="grid gid-cols-2 gap-4 justify-items-center">
+        <div class="grid grid-cols-2 gap-2 fields">
+            <span>O</span><span>{{ quote.O }}</span>
+            <span>H</span><span>{{ quote.H }}</span>
+            <span>L</span><span>{{ quote.L }}</span>
+            <span>C</span><span>{{ quote.C }}</span>
+            <span>Pc</span><span>{{ quote.Pc }}</span>
+        </div>
+        <div class="grid grid-cols-1 gap-2 mb-4">
+            <form action="/buy" method="post" class="inputs">
+                <label for="amount">Amount</label>
+                <input type="number" id="amount" placeholder="0" name="amount">
+                <input type="hidden" name="symbol" value="{{ symbol }}">
+                <input type="hidden" name="quote" value="{{ quote.C }}">
+                <input type="submit" class="btn-gray font-bold" value="Buy">
+            </form>
+        </div>
+    </div>
+{% endif %}
