@@ -42,7 +42,8 @@ class AssetService
                     $profile->getLogo(),
                     $transaction->getQuote(),
                     $transaction->getAmount(),
-                    $this->quoteService->quote($symbol)->getC() * 1000
+                    $this->quoteService->quote($symbol)->getC() * 1000,
+                    $transaction->getId(),
                 )
             );
         }

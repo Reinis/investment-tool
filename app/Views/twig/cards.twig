@@ -16,16 +16,16 @@
                     </div>
                 </div>
                 <div class="self-center text-center">
-                        <span
-                            class="font-bold {{ symbol.difference < 0 ? 'text-red-800' : 'text-green-600' }}">
-                            {{ symbol.difference | round(2) }}%
-                        </span>
+                    <span
+                        class="font-bold {{ symbol.difference < 0 ? 'text-red-800' : 'text-green-600' }}">
+                        {{ symbol.difference | round(2) }}%
+                    </span>
                     <span class="text-sm">
-                            ({{ ((symbol.price - symbol.value) / 1000) | round(2) }})
-                        </span>
+                        ({{ ((symbol.price - symbol.value) / 1000) | round(2) }})
+                    </span>
                 </div>
                 <div class="text-2xl font-bold text-gray-300 self-end justify-self-end underline">
-                    Sell
+                    <a href="/close/{{ symbol.id }}">Sell</a>
                 </div>
             </div>
         </div>

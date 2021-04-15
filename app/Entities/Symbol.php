@@ -6,6 +6,7 @@ namespace InvestmentTool\Entities;
 
 class Symbol
 {
+    private ?int $id;
     private string $symbol;
     private string $name;
     private string $logo;
@@ -13,14 +14,20 @@ class Symbol
     private int $amount;
     private int $value;
 
-    public function __construct(string $symbol, string $name, string $logo, int $price, int $amount, int $value)
+    public function __construct(string $symbol, string $name, string $logo, int $price, int $amount, int $value, ?int $id = null)
     {
+        $this->id = $id;
         $this->symbol = $symbol;
         $this->name = $name;
         $this->logo = $logo;
         $this->price = $price;
         $this->amount = $amount;
         $this->value = $value;
+    }
+
+    public function getId(): ?int
+    {
+        return $this->id;
     }
 
     public function getSymbol(): string
@@ -53,9 +60,9 @@ class Symbol
         return $this->value;
     }
 
-    public function invested(): int
+    public function difference(): float
     {
-        return $this->price * $this->amount;
+        return $this->currentValue() / $this->invested() * 100 - 100;
     }
 
     public function currentValue(): int
@@ -63,8 +70,8 @@ class Symbol
         return $this->value * $this->amount;
     }
 
-    public function difference(): float
+    public function invested(): int
     {
-        return $this->currentValue() / $this->invested() * 100 - 100;
+        return $this->price * $this->amount;
     }
 }
