@@ -1,8 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
+
 namespace InvestmentTool\Entities;
 
+
 use DateTime;
+
 
 class Transaction
 {

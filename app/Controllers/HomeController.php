@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 
 namespace InvestmentTool\Controllers;
 
@@ -66,7 +68,7 @@ class HomeController
 
     public function close(array $vars): string
     {
-        $id = $vars['id'] ?? 0;
+        $id = (int)($vars['id'] ?? 0);
 
         if ($id === 0) {
             $message = "Could no find the record";
@@ -123,7 +125,7 @@ class HomeController
         }
 
         $symbol = $_POST['symbol'];
-        $amount = $_POST['amount'];
+        $amount = filter_var($_POST['amount'], FILTER_VALIDATE_INT);
 
         try {
             $this->transactionService->add($symbol, $amount);

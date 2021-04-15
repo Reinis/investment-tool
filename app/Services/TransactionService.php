@@ -1,12 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
+
 namespace InvestmentTool\Services;
+
 
 use InvalidArgumentException;
 use InvestmentTool\Entities\Collections\Transactions;
 use InvestmentTool\Entities\Transaction;
 use InvestmentTool\Repositories\StockRepository;
 use InvestmentTool\Repositories\TransactionRepository;
+
 
 class TransactionService
 {
@@ -21,10 +26,10 @@ class TransactionService
         $this->fundsService = $fundsService;
     }
 
-    public function add($symbol, $amount): void
+    public function add(string $symbol, int $amount): void
     {
         $availableFunds = $this->fundsService->getAvailableFunds();
-        $quote = $this->stockRepository->quote($symbol, true)->getC() * 1000;
+        $quote = (int)($this->stockRepository->quote($symbol, true)->getC() * 1000);
 
         if ($quote * $amount > $availableFunds) {
             throw new InvalidArgumentException("Not enough funds");
