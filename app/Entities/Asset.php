@@ -4,7 +4,7 @@
 namespace InvestmentTool\Entities;
 
 
-class Symbol
+class Asset
 {
     private ?int $id;
     private string $symbol;
@@ -14,7 +14,15 @@ class Symbol
     private int $amount;
     private int $value;
 
-    public function __construct(string $symbol, string $name, string $logo, int $price, int $amount, int $value, ?int $id = null)
+    public function __construct(
+        string $symbol,
+        string $name,
+        string $logo,
+        int $price,
+        int $amount,
+        int $value,
+        ?int $id = null
+    )
     {
         $this->id = $id;
         $this->symbol = $symbol;

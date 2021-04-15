@@ -35,11 +35,11 @@ class HomeController
 
     public function index(): string
     {
-        $symbols = $this->assetService->get();
+        $assets = $this->assetService->get();
         $transactions = $this->transactionService->getAll();
         $availableFunds = $this->fundsService->getAvailableFunds();
 
-        return $this->view->render('home', compact('symbols', 'transactions', 'availableFunds'));
+        return $this->view->render('home', compact('assets', 'transactions', 'availableFunds'));
     }
 
     public function delete(array $vars): string
@@ -86,11 +86,11 @@ class HomeController
         }
 
         $quote = $this->quoteService->quote($symbol);
-        $symbols = $this->assetService->get();
+        $assets = $this->assetService->get();
         $transactions = $this->transactionService->getAll();
         $availableFunds = $this->fundsService->getAvailableFunds();
 
-        return $this->view->render('home', compact('symbol', 'quote', 'symbols', 'transactions', 'availableFunds'));
+        return $this->view->render('home', compact('symbol', 'quote', 'assets', 'transactions', 'availableFunds'));
     }
 
     public function quote(array $vars): string

@@ -1,31 +1,31 @@
 <div class="flex flex-wrap gap-4 m-2 justify-center">
-    {% for symbol in symbols %}
+    {% for asset in assets %}
         <div class="w-64 h-32 grid grid-cols-2 gap-2 p-2 bg-gray-400">
             <div class="grid">
-                <div class="w-14 h-14"><img src="{{ symbol.logo }}" alt="logo"></div>
-                <div class="font-bold">{{ symbol.symbol }}</div>
-                <div>{{ symbol.name }}</div>
+                <div class="w-14 h-14"><img src="{{ asset.logo }}" alt="logo"></div>
+                <div class="font-bold">{{ asset.symbol }}</div>
+                <div>{{ asset.name }}</div>
             </div>
             <div class="grid">
                 <div class="flex text-xl justify-between">
                     <div>
-                        {{ (symbol.value / 1000) | format_currency('USD', locale='en') }}
+                        {{ (asset.value / 1000) | format_currency('USD', locale='en') }}
                     </div>
                     <div class="font-bold mr-2">
-                        x{{ symbol.amount }}
+                        x{{ asset.amount }}
                     </div>
                 </div>
                 <div class="self-center text-center">
                     <span
-                        class="font-bold {{ symbol.difference < 0 ? 'text-red-800' : 'text-green-600' }}">
-                        {{ symbol.difference | round(2) }}%
+                        class="font-bold {{ asset.difference < 0 ? 'text-red-800' : 'text-green-600' }}">
+                        {{ asset.difference | round(2) }}%
                     </span>
                     <span class="text-sm">
-                        ({{ ((symbol.price - symbol.value) / 1000) | round(2) }})
+                        ({{ ((asset.price - asset.value) / 1000) | round(2) }})
                     </span>
                 </div>
                 <div class="text-2xl font-bold text-gray-300 self-end justify-self-end underline">
-                    <a href="/close/{{ symbol.id }}">Sell</a>
+                    <a href="/close/{{ asset.id }}">Sell</a>
                 </div>
             </div>
         </div>

@@ -4,8 +4,8 @@
 namespace InvestmentTool\Services;
 
 
-use InvestmentTool\Entities\Collections\Symbols;
-use InvestmentTool\Entities\Symbol;
+use InvestmentTool\Entities\Collections\Assets;
+use InvestmentTool\Entities\Asset;
 use InvestmentTool\Repositories\StockRepository;
 use InvestmentTool\Repositories\TransactionRepository;
 
@@ -27,16 +27,16 @@ class AssetService
         $this->transactionRepository = $transactionRepository;
     }
 
-    public function get(): Symbols
+    public function get(): Assets
     {
-        $symbols = new Symbols();
+        $assets = new Assets();
         $transactions = $this->transactionRepository->getActive();
 
         foreach ($transactions as $transaction) {
             $symbol = $transaction->getSymbol();
             $profile = $this->stockRepository->profile($symbol);
-            $symbols->add(
-                new Symbol(
+            $assets->add(
+                new Asset(
                     $symbol,
                     $profile->getName(),
                     $profile->getLogo(),
@@ -48,6 +48,6 @@ class AssetService
             );
         }
 
-        return $symbols;
+        return $assets;
     }
 }
