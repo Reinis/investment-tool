@@ -1,0 +1,33 @@
+<div class="flex flex-wrap gap-4 m-2 justify-center">
+    {% for asset in assets %}
+        <div class="w-64 h-32 grid grid-cols-2 gap-2 p-2 bg-gray-400">
+            <div class="grid">
+                <div class="w-14 h-14"><img src="{{ asset.logo }}" alt="logo"></div>
+                <div class="font-bold">{{ asset.symbol }}</div>
+                <div>{{ asset.name }}</div>
+            </div>
+            <div class="grid">
+                <div class="flex text-xl justify-between">
+                    <div>
+                        {{ (asset.value / 1000) | format_currency('USD', locale='en') }}
+                    </div>
+                    <div class="font-bold mr-2">
+                        x{{ asset.amount }}
+                    </div>
+                </div>
+                <div class="self-center text-center">
+                    <span
+                        class="font-bold {{ asset.difference < 0 ? 'text-red-800' : 'text-green-600' }}">
+                        {{ asset.difference | round(2) }}%
+                    </span>
+                    <span class="text-sm">
+                        ({{ ((asset.value - asset.price) / 1000) | round(2) }})
+                    </span>
+                </div>
+                <div class="text-2xl font-bold text-gray-300 self-end justify-self-end underline">
+                    <a href="/close/{{ asset.id }}">Sell</a>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>

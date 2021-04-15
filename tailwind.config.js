@@ -1,7 +1,7 @@
 module.exports = {
     purge: {
         content: [
-            './src/Views/twig/*.twig',
+            './app/Views/twig/*.twig',
         ],
     },
     darkMode: false, // or 'media' or 'class'

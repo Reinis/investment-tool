@@ -162,4 +162,18 @@ class MySQLTransactionRepository implements TransactionRepository
 
         return $this->fetchAll($sql, $errorMessage);
     }
+
+    public function isClosed(int $id): bool
+    {
+        $sql = "select closed from `transaction_log` where id = ?;";
+        $statement = $this->connection->prepare($sql);
+        $statement->execute([$id]);
+        $result = $statement->fetch();
+
+        if ($result === false) {
+            throw new InvalidArgumentException("Could not get status of record {$id}");
+        }
+
+        return $result->closed;
+    }
 }
