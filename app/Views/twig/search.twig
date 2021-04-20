@@ -4,7 +4,7 @@
         <select name="method" class="flex p-2 pr-7 border-0 border-r bg-gray-300 hover:bg-gray-400">
             <option value="quote"{% if method == 'quote' %} selected{% endif %}>Quote</option>
         </select>
-        <input type="search" name="symbol" placeholder="Symbol" class="flex p-2 bg-gray-200 border-0"
+        <input type="search" name="symbol" placeholder="Symbol" class="flex w-32 md:w-64 p-2 bg-gray-200 border-0"
                {% if symbol %}value="{{ symbol }}"{% endif %}>
         <input type="submit" name="quote" value="Get" class="flex p-2 bg-gray-700 text-gray-300">
     </form>

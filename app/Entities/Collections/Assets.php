@@ -29,6 +29,11 @@ class Assets implements IteratorAggregate, Countable
         $this->assets[] = $asset;
     }
 
+    public function getTotalDifference(): int
+    {
+        return array_sum(array_map(static fn(Asset $asset): int => $asset->currentValue() - $asset->invested(), $this->assets));
+    }
+
     /**
      * @return ArrayIterator|Asset[]
      */
