@@ -10,6 +10,7 @@
             <th>Closed</th>
             <th>Closing Value</th>
             <th>Closing Date</th>
+            <th>Profit</th>
             <th>Action</th>
         </tr>
         {% for transaction in transactions %}
@@ -23,6 +24,10 @@
                 <td>{% if transaction.closed %}true{% else %}false{% endif %}</td>
                 <td>{% if transaction.closed %}{{ transaction.closingValue / 1000 }}{% endif %}</td>
                 <td>{% if transaction.closed %}{{ transaction.closingDate | date("Y-m-d H:i:s") }}{% endif %}</td>
+                {% set difference = transaction.closingValue - transaction.quote %}
+                <td class="{% if difference < 0 %}text-red-500{% else %}text-green-500{% endif %}">
+                    {% if transaction.closed %}{{ difference / 1000 }}{% endif %}
+                </td>
                 <td>
                     <div class="flex justify-around items-center">
                         {% if transaction.closed %}
